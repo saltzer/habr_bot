@@ -14,7 +14,7 @@ import os
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-invite = ##########
+invite = YOUR_CHAT_ID
 
 button_help = KeyboardButton('/help')
 button_categories = KeyboardButton('/categories')
@@ -57,7 +57,7 @@ async def process_help_command(message: types.Message):
         await message.reply("Where your invite code?")
         log("Неудачная попытка обратиться к помощи юзером " + name + " | Время: " + str(datetime.now()) + '\n')
     else:
-        await message.reply("Бот для чтения статей с habr.com.\nПо запросу из категорий будет показана популярная за день\неделю\месяц статья.\n\n┌\help──────────────────⊸\n│\n├  Бот отвечает на команды:\n│       ├ /start - запуск, перезапуск бота\n│       ├ /help - вывод этого сообщения\n│       ├ /categories - просмотр категорий")
+        await message.reply("Бот для чтения статей с habr.com \n\n┌\help──────────────────⊸\n│\n├  Бот отвечает на команды:\n│       ├ /start - запуск бота\n│       ├ /help - вывод этого сообщения\n│       ├ /categories - просмотр хабов\n |        ├ /command - выполнить команду")
         log("Удачное обращение к помощи юзером " + name + " | Время: " + str(datetime.now()) + '\n')
 
 @dp.message_handler(commands=['categories'])
