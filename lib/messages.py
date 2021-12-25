@@ -48,11 +48,11 @@ def register_message_handlers(dispatcher, bot, inviteCode):
         async def handler():
             await message.reply(
                 """ Бот для чтения статей с habr.com
-            Бот отвечает на команды:
-                /start - запуск бота
-                /help - вывод этого сообщения
-                /categories - просмотр хабов
-                /command - выполнить команду
+Бот отвечает на команды:
+    /start - запуск бота
+    /help - вывод этого сообщения
+    /categories - просмотр хабов
+    /command - выполнить команду
             """
             )
 
@@ -74,13 +74,5 @@ def register_message_handlers(dispatcher, bot, inviteCode):
 
     @dispatcher.message_handler()
     async def echo_message(msg):
-        log(
-            msg.chat.full_name
-            + " | "
-            + "@"
-            + msg.chat.username
-            + ": "
-            + msg.text
-            + "\n"
-        )
+        log(f"{msg.chat.full_name} | @{msg.chat.username}: {msg.text}\n")
         await bot.send_message(msg.from_user.id, "Hmmm...")
