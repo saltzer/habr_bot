@@ -1,12 +1,22 @@
-## Bot for parsing articles from habr.com
+# HabraBot
 
-### logging of actions and excluding other users by chat_id 
+## About
+Bot for parsing articles from habr.com
 
-### habr article categories
-![](https://github.com/saltzer/habr_bot/blob/main/image.png)
+## Commands
+### `/start` - start a Bot
 
-### virtual machine commands
-![](https://github.com/saltzer/habr_bot/blob/main/commands.png)
+### `/help` - display all available commands
+![](assets/help.png)
 
-### help message
-![](https://github.com/saltzer/habr_bot/blob/main/help.png)
+### `/categories` - display hubs
+![](assets/categories.png)
+
+### `/command` - display available VM commands
+![](assets/vm-commands.png)
+
+
+## To Do
+
+- [x] Log user actions
+- [x] Exclude other users via `chat_id`
