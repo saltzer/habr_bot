@@ -6,7 +6,7 @@
 ![](https://github.com/saltzer/habr_bot/blob/main/image.png)
 
 ### virtual machine commands
-![](https://github.com/saltzer/habr_bot/blob/main/command.png)
+![](https://github.com/saltzer/habr_bot/blob/main/commands.png)
 
 ### help message
 ![](https://github.com/saltzer/habr_bot/blob/main/help.png)
