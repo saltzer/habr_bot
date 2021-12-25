@@ -3,7 +3,6 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, message
 from config import TOKEN
-import asyncio
 from bs4 import BeautifulSoup, SoupStrainer
 import urllib.request
 from datetime import datetime
@@ -14,7 +13,7 @@ import os
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-invite = YOUR_CHAT_ID
+invite = #########
 
 button_help = KeyboardButton('/help')
 button_categories = KeyboardButton('/categories')
@@ -92,12 +91,12 @@ async def process_callback_button(callback_query: types.CallbackQuery):
     log("Выдана статья по InfoSec" + " | Время: " + str(datetime.now()) + '\n')
     await bot.answer_callback_query(callback_query.id)
 
-@dp.callback_query_handler(lambda c: c.data == 'Dev')
+@dp.callback_query_handler(lambda c: c.data == 'Py')
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(h_url.url_dev)
+    url = urllib.request.urlopen(h_url.url_py)
     res = soup(url)
     await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по Dev" + " | Время: " + str(datetime.now()) + '\n')
+    log("Выдана статья по Py" + " | Время: " + str(datetime.now()) + '\n')
     await bot.answer_callback_query(callback_query.id)
 
 @dp.callback_query_handler(lambda c: c.data == 'PopScien')

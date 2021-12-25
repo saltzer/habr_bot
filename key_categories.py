@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 b_infosec = InlineKeyboardButton('Информационная безопасность',       callback_data='InfoSec')
-b_dev = InlineKeyboardButton('Программирование',                      callback_data='Dev')
+b_py = InlineKeyboardButton('Python',                                 callback_data='Py')
 b_popscien = InlineKeyboardButton('Научно-популярное',                callback_data='PopScien')
 b_diy = InlineKeyboardButton('DIY',                                   callback_data='DIY')
 b_gadgets = InlineKeyboardButton('Гаджеты',                           callback_data='Gadgets')
@@ -15,6 +15,6 @@ b_sysdev = InlineKeyboardButton('Системное программирован
 
 inline_kb_full = InlineKeyboardMarkup(row_width=1).add(b_devmic, b_infosec, b_servadm, b_sysdev)
 inline_kb_full.add(b_net, b_robotics)
-inline_kb_full.row(b_dev, b_popscien)
+inline_kb_full.row(b_py, b_popscien)
 inline_kb_full.row(b_gadgets, b_devops)
 inline_kb_full.row(b_diy, b_nix)

@@ -1,6 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-
 b_reboot = InlineKeyboardButton('$ reboot vm',                     callback_data='reboot')
 b_shutdown = InlineKeyboardButton('$ shutdown vm',                 callback_data='shutdown')
 b_mycom = InlineKeyboardButton('$ my command',                     callback_data='mycom')
