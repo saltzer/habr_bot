@@ -13,7 +13,7 @@ import os, subprocess
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-invite = #######
+invite = ########
 
 button_help = KeyboardButton('/help')
 button_categories = KeyboardButton('/categories')
@@ -198,6 +198,7 @@ async def process_callback_button(callback_query: types.CallbackQuery):
     try:
         with open('log.txt', 'rb') as file:
             await bot.send_document(invite, file)
+        await bot.answer_callback_query(callback_query.id)
     except:
         await bot.send_message(invite, "Error send log")
 
