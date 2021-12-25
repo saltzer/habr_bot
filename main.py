@@ -9,11 +9,11 @@ from datetime import datetime
 import h_url
 from key_categories import inline_kb_full
 from key_command import inline_kb_com
-import os
+import os, subprocess
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-invite = ######
+invite = #######
 
 button_help = KeyboardButton('/help')
 button_categories = KeyboardButton('/categories')
@@ -195,15 +195,22 @@ async def process_callback_button(callback_query: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data == 'get_log')
 async def process_callback_button(callback_query: types.CallbackQuery):
-    with open('log.txt', 'rb') as file:
-        await bot.send_document(invite, file)
+    try:
+        with open('log.txt', 'rb') as file:
+            await bot.send_document(invite, file)
+    except:
+        await bot.send_message(invite, "Error send log")
 
-@dp.callback_query_handler(lambda c: c.data == 'b_mycom')
+@dp.callback_query_handler(lambda c: c.data == 'check_net')
 async def process_callback_button(callback_query: types.CallbackQuery):
-    log("Выполнена команда shutdown " + " | Время: " + str(datetime.now()) + '\n')
-    os.system("gtop")
-    await bot.answer_callback_query(callback_query.id)
-
+    try:
+        command = ['wget -O - -q icanhazip.com']
+        process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        res = process.stdout.read().decode('gbk')
+        await bot.send_message(invite, res)
+        await bot.answer_callback_query(callback_query.id)
+    except:
+        await bot.send_message(invite, "Error check IP")
 
 @dp.message_handler()
 async def echo_message(msg: types.Message):
