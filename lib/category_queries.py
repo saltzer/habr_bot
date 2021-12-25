@@ -11,7 +11,7 @@ async def process_callback_handler(url: Hubs, bot, query) -> None:
     await bot.answer_callback_query(query.id)
 
 
-def test(dispatcher, bot):
+def register_category_queries(dispatcher, bot):
     @dispatcher.callback_query_handler(lambda c: c.data == "InfoSec")
     async def process_callback_button(callback_query):
         await process_callback_handler(Hubs.infosec, bot, callback_query)
