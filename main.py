@@ -13,7 +13,7 @@ import os
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-invite = #########
+invite = ######
 
 button_help = KeyboardButton('/help')
 button_categories = KeyboardButton('/categories')
@@ -43,7 +43,7 @@ async def process_start_command(message: types.Message):
     print(chat_id)
     if chat_id != invite:
         await message.reply("Where your invite code?")
-        log("Неудачная попытка запуска бота юзером " + name + " | Время: " + str(datetime.now()) + '\n')
+        log("! Неудачная попытка запуска бота юзером " + name + " | Время: " + str(datetime.now()) + '\n')
     else:
         await message.reply("Бот для чтения статей с habr.com\n/help - для помощи.", reply_markup=markup)
         log("Удачный запуск бота, открыта клавиатура юзером " + name + " | Время: " + str(datetime.now()) + '\n')
@@ -54,9 +54,9 @@ async def process_help_command(message: types.Message):
     name = message.chat.first_name
     if chat_id != invite:
         await message.reply("Where your invite code?")
-        log("Неудачная попытка обратиться к помощи юзером " + name + " | Время: " + str(datetime.now()) + '\n')
+        log("! Неудачная попытка обратиться к помощи юзером " + name + " | Время: " + str(datetime.now()) + '\n')
     else:
-        await message.reply("Бот для чтения статей с habr.com \n\n┌\help──────────────────⊸\n│\n├  Бот отвечает на команды:\n│       ├ /start - запуск бота\n│       ├ /help - вывод этого сообщения\n│       ├ /categories - просмотр хабов\n |        ├ /command - выполнить команду")
+        await message.reply("Бот для чтения статей с habr.com \n\nБот отвечает на команды:\n\n/start - запуск бота\n/help - вывод этого сообщения\n/categories - просмотр хабов\n/command - выполнить команду")
         log("Удачное обращение к помощи юзером " + name + " | Время: " + str(datetime.now()) + '\n')
 
 @dp.message_handler(commands=['categories'])
@@ -65,7 +65,7 @@ async def process_categories_command(message: types.Message):
     name = message.chat.first_name
     if chat_id != invite:
         await message.reply("Where your invite code?")
-        log("Неудачная попытка открыть категории юзером " + name + " | Время: " + str(datetime.now()) + '\n')
+        log("! Неудачная попытка открыть категории юзером " + name + " | Время: " + str(datetime.now()) + '\n')
     else:
         await message.reply("Доступные хабы:", reply_markup=inline_kb_full)
         log("Открыты кнопки с хабами юзером " + name + " | Время: " + str(datetime.now()) + '\n')
@@ -76,7 +76,7 @@ async def process_categories_command(message: types.Message):
     name = message.chat.first_name
     if chat_id != invite:
         await message.reply("Where your invite code?")
-        log("Неудачная попытка открыть кнопки с командами юзером " + name + " | Время: " + str(datetime.now()) + '\n')
+        log("! Неудачная попытка открыть кнопки с командами юзером " + name + " | Время: " + str(datetime.now()) + '\n')
     else:
         await message.reply("Доступные команды:", reply_markup=inline_kb_com)
         log("Открыты кнопки с командами юзером " + name + " | Время: " + str(datetime.now()) + '\n')
