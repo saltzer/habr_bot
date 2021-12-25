@@ -4,13 +4,24 @@ from lib.utils import log
 from datetime import datetime
 from lib.key_categories import inline_kb_full
 from lib.key_command import inline_kb_com
+from aiogram.types import (
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+)
+
+markup = (
+    ReplyKeyboardMarkup(resize_keyboard=True)
+    .add(KeyboardButton("/help"))
+    .add(KeyboardButton("/categories"))
+    .add(KeyboardButton("/command"))
+)
 
 
 def user_authorized(id: int, inviteId: int) -> bool:
     return id == inviteId
 
 
-def register_message_handlers(dispatcher, bot, inviteCode, markup):
+def register_message_handlers(dispatcher, bot, inviteCode):
     async def message_handler(message, handler: Callable) -> None:
         chat_id = message.chat.id
         name = message.chat.first_name
