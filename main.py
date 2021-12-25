@@ -9,291 +9,183 @@ from aiogram.types import (
     message,
 )
 from config import TOKEN
-from bs4 import BeautifulSoup
 import urllib.request
 from datetime import datetime
 from lib.hubs import Hubs
+from lib.utils import log, parse
 from lib.commands import Command
 from lib.key_categories import inline_kb_full
 from lib.key_command import inline_kb_com
 import os, subprocess
 
 bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
-invite = "########"
 
-button_help = KeyboardButton("/help")
-button_categories = KeyboardButton("/categories")
-button_com = KeyboardButton("/command")
+dispatcher = Dispatcher(bot)
+inviteCode = "########"
 
 markup = (
     ReplyKeyboardMarkup(resize_keyboard=True)
-    .add(button_help)
-    .add(button_categories)
-    .add(button_com)
+    .add(KeyboardButton("/help"))
+    .add(KeyboardButton("/categories"))
+    .add(KeyboardButton("/command"))
 )
 
 
-def soup(url):
-    soup = BeautifulSoup(url, features="lxml")
-    for link in soup.find_all("a", href=True):
-        if "/blog/" in link["href"] or "/post/" in link["href"]:
-            if not link["href"].endswith("blog/") and not link["href"].endswith(
-                "comments/"
-            ):
-                res = "https://habr.com" + link["href"]
-                return res
+def user_authorized(id: int, inviteId: int) -> bool:
+    return id == inviteId
 
 
-def log(line):
-    log = open("log.txt", "a")
-    log.write(line)
-    log.close()
+async def message_handler(message: types.Message, handler: function) -> None:
+    chat_id = message.chat.id
+    name = message.chat.first_name
+
+    if user_authorized(chat_id, inviteCode):
+        await handler()
+        log(f"![{datetime.now()}] Success access from user: {name}\n")
+    else:
+        await message.reply("Where is your invite code?")
+        log(f"![{datetime.now()}] Unregistered user: {name}\n")
+
+
+async def process_callback_handler(
+    url: Hubs, bot: Bot, query: types.CallbackQuery
+) -> None:
+    res = parse(urllib.request.urlopen(url))
+    await bot.send_message(query.from_user.id, res)
+    log(f"[{datetime.now()}] Выдана статья по {url}\n")
+    await bot.answer_callback_query(query.id)
 
 
 # ---------main_buttons---------
-
-
-@dp.message_handler(commands=[Command.Start])
+@dispatcher.message_handler(commands=[Command.Start])
 async def process_start_command(message: types.Message):
-    chat_id = message.chat.id
-    name = message.chat.first_name
-    print(chat_id)
-    if chat_id != invite:
-        await message.reply("Where your invite code?")
-        log(
-            "! Неудачная попытка запуска бота юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
-    else:
+    async def handler():
         await message.reply(
             "Бот для чтения статей с habr.com\n/help - для помощи.", reply_markup=markup
         )
-        log(
-            "Удачный запуск бота, открыта клавиатура юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
+
+    message_handler(message, handler)
 
 
-@dp.message_handler(commands=[Command.Help])
+@dispatcher.message_handler(commands=[Command.Help])
 async def process_help_command(message: types.Message):
-    chat_id = message.chat.id
-    name = message.chat.first_name
-    if chat_id != invite:
-        await message.reply("Where your invite code?")
-        log(
-            "! Неудачная попытка обратиться к помощи юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
-    else:
+    async def handler():
         await message.reply(
-            "Бот для чтения статей с habr.com \n\nБот отвечает на команды:\n\n/start - запуск бота\n/help - вывод этого сообщения\n/categories - просмотр хабов\n/command - выполнить команду"
-        )
-        log(
-            "Удачное обращение к помощи юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
+            """ Бот для чтения статей с habr.com
+        Бот отвечает на команды:
+            /start - запуск бота
+            /help - вывод этого сообщения
+            /categories - просмотр хабов
+            /command - выполнить команду
+        """
         )
 
+    message_handler(message, handler)
 
-@dp.message_handler(commands=[Command.Categories])
+
+@dispatcher.message_handler(commands=[Command.Categories])
 async def process_categories_command(message: types.Message):
-    chat_id = message.chat.id
-    name = message.chat.first_name
-    if chat_id != invite:
-        await message.reply("Where your invite code?")
-        log(
-            "! Неудачная попытка открыть категории юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
-    else:
+    async def handler():
         await message.reply("Доступные хабы:", reply_markup=inline_kb_full)
-        log(
-            "Открыты кнопки с хабами юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
+
+    message_handler(message, handler)
 
 
-@dp.message_handler(commands=[Command.Vm])
+@dispatcher.message_handler(commands=[Command.Vm])
 async def process_vm_command(message: types.Message):
-    chat_id = message.chat.id
-    name = message.chat.first_name
-    if chat_id != invite:
-        await message.reply("Where your invite code?")
-        log(
-            "! Неудачная попытка открыть кнопки с командами юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
-    else:
+    async def handler():
         await message.reply("Доступные команды:", reply_markup=inline_kb_com)
-        log(
-            "Открыты кнопки с командами юзером "
-            + name
-            + " | Время: "
-            + str(datetime.now())
-            + "\n"
-        )
+
+    message_handler(message, handler)
 
 
 # ---------callback_categories---------
-
-
-@dp.callback_query_handler(lambda c: c.data == "InfoSec")
+@dispatcher.callback_query_handler(lambda c: c.data == "InfoSec")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.infosec)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по InfoSec" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.infosec, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "Py")
+@dispatcher.callback_query_handler(lambda c: c.data == "Py")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.py)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по Py" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.py, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "PopScien")
+@dispatcher.callback_query_handler(lambda c: c.data == "PopScien")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.popscien)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по PopScien" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.popscien, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "DIY")
+@dispatcher.callback_query_handler(lambda c: c.data == "DIY")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.diy)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по DIY" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.diy, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "Gadgets")
+@dispatcher.callback_query_handler(lambda c: c.data == "Gadgets")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.gadgets)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по Gadgets" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.gadgets, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "DevMic")
+@dispatcher.callback_query_handler(lambda c: c.data == "DevMic")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.devmic)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по DevMic" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.devmic, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "ServAdm")
+@dispatcher.callback_query_handler(lambda c: c.data == "ServAdm")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.servadm)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по ServAdm" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.servadm, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "DevOps")
+@dispatcher.callback_query_handler(lambda c: c.data == "DevOps")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.devops)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по DevOps" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.devops, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "Network")
+@dispatcher.callback_query_handler(lambda c: c.data == "Network")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.network)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по Network" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.network, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "Nix")
+@dispatcher.callback_query_handler(lambda c: c.data == "Nix")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.nix)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по Nix" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.nix, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "Robot")
+@dispatcher.callback_query_handler(lambda c: c.data == "Robot")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.robot)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по Robot" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.robot, bot, callback_query)
 
 
-@dp.callback_query_handler(lambda c: c.data == "SysDev")
+@dispatcher.callback_query_handler(lambda c: c.data == "SysDev")
 async def process_callback_button(callback_query: types.CallbackQuery):
-    url = urllib.request.urlopen(Hubs.sysdev)
-    res = soup(url)
-    await bot.send_message(callback_query.from_user.id, res)
-    log("Выдана статья по SysDev" + " | Время: " + str(datetime.now()) + "\n")
-    await bot.answer_callback_query(callback_query.id)
+    await process_callback_handler(Hubs.sysdev, bot, callback_query)
 
 
 # ---------callback_commands---------
-
-
-@dp.callback_query_handler(lambda c: c.data == "reboot")
+@dispatcher.callback_query_handler(lambda c: c.data == "reboot")
 async def process_callback_button(callback_query: types.CallbackQuery):
     log("Выполнена команда reboot " + " | Время: " + str(datetime.now()) + "\n")
     os.system("reboot")
     await bot.answer_callback_query(callback_query.id)
 
 
-@dp.callback_query_handler(lambda c: c.data == "shutdown")
+@dispatcher.callback_query_handler(lambda c: c.data == "shutdown")
 async def process_callback_button(callback_query: types.CallbackQuery):
     log("Выполнена команда shutdown " + " | Время: " + str(datetime.now()) + "\n")
     os.system("shutdown")
     await bot.answer_callback_query(callback_query.id)
 
 
-@dp.callback_query_handler(lambda c: c.data == "get_log")
+@dispatcher.callback_query_handler(lambda c: c.data == "get_log")
 async def process_callback_button(callback_query: types.CallbackQuery):
     try:
         with open("log.txt", "rb") as file:
-            await bot.send_document(invite, file)
+            await bot.send_document(inviteCode, file)
         await bot.answer_callback_query(callback_query.id)
     except:
-        await bot.send_message(invite, "Error send log")
+        await bot.send_message(inviteCode, "Error send log")
 
 
-@dp.callback_query_handler(lambda c: c.data == "check_net")
+@dispatcher.callback_query_handler(lambda c: c.data == "check_net")
 async def process_callback_button(callback_query: types.CallbackQuery):
     try:
         command = ["wget -O - -q icanhazip.com"]
@@ -305,17 +197,17 @@ async def process_callback_button(callback_query: types.CallbackQuery):
             shell=True,
         )
         res = process.stdout.read().decode("gbk")
-        await bot.send_message(invite, res)
+        await bot.send_message(inviteCode, res)
         await bot.answer_callback_query(callback_query.id)
     except:
-        await bot.send_message(invite, "Error check IP")
+        await bot.send_message(inviteCode, "Error check IP")
 
 
-@dp.message_handler()
+@dispatcher.message_handler()
 async def echo_message(msg: types.Message):
     log(msg.chat.full_name + " | " + "@" + msg.chat.username + ": " + msg.text + "\n")
     await bot.send_message(msg.from_user.id, "Hmmm...")
 
 
 if __name__ == "__main__":
-    executor.start_polling(dp)
+    executor.start_polling(dispatcher)
