@@ -1,4 +1,4 @@
-from utils import compose_hub_url
+from lib.utils import compose_hub_url
 
 
 class Hubs:
