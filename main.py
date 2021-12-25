@@ -1,3 +1,4 @@
+from typing import Callable
 from aiogram import Bot, types, filters
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -35,7 +36,7 @@ def user_authorized(id: int, inviteId: int) -> bool:
     return id == inviteId
 
 
-async def message_handler(message: types.Message, handler: function) -> None:
+async def message_handler(message: types.Message, handler: Callable) -> None:
     chat_id = message.chat.id
     name = message.chat.first_name
 
@@ -64,7 +65,7 @@ async def process_start_command(message: types.Message):
             "Бот для чтения статей с habr.com\n/help - для помощи.", reply_markup=markup
         )
 
-    message_handler(message, handler)
+    await message_handler(message, handler)
 
 
 @dispatcher.message_handler(commands=[Command.Help])
@@ -80,7 +81,7 @@ async def process_help_command(message: types.Message):
         """
         )
 
-    message_handler(message, handler)
+    await message_handler(message, handler)
 
 
 @dispatcher.message_handler(commands=[Command.Categories])
@@ -88,7 +89,7 @@ async def process_categories_command(message: types.Message):
     async def handler():
         await message.reply("Доступные хабы:", reply_markup=inline_kb_full)
 
-    message_handler(message, handler)
+    await message_handler(message, handler)
 
 
 @dispatcher.message_handler(commands=[Command.Vm])
@@ -96,7 +97,7 @@ async def process_vm_command(message: types.Message):
     async def handler():
         await message.reply("Доступные команды:", reply_markup=inline_kb_com)
 
-    message_handler(message, handler)
+    await message_handler(message, handler)
 
 
 # ---------callback_categories---------
