@@ -101,64 +101,26 @@ async def process_vm_command(message: types.Message):
 
 
 # ---------callback_categories---------
-@dispatcher.callback_query_handler(lambda c: c.data == "InfoSec")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.infosec, bot, callback_query)
+callback_data_map = {
+    "InfoSec": Hubs.infosec,
+    "Py": Hubs.py,
+    "PopScien": Hubs.popscien,
+    "DIY": Hubs.diy,
+    "Gadgets": Hubs.gadgets,
+    "DevMic": Hubs.devmic,
+    "ServAdm": Hubs.servadm,
+    "DevOps": Hubs.devops,
+    "Network": Hubs.network,
+    "Nix": Hubs.nix,
+    "Robot": Hubs.robot,
+    "SysDev": Hubs.sysdev,
+}
 
+for key in callback_data_map.keys():
 
-@dispatcher.callback_query_handler(lambda c: c.data == "Py")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.py, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "PopScien")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.popscien, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "DIY")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.diy, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Gadgets")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.gadgets, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "DevMic")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.devmic, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "ServAdm")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.servadm, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "DevOps")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.devops, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Network")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.network, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Nix")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.nix, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Robot")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.robot, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "SysDev")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.sysdev, bot, callback_query)
+    @dispatcher.callback_query_handler(lambda c: c.data == key)
+    async def process_callback_button(callback_query: types.CallbackQuery):
+        await process_callback_handler(callback_data_map[key], bot, callback_query)
 
 
 # ---------callback_commands---------
