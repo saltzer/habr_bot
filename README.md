@@ -1,4 +1,4 @@
-# HabraBot
+# HabrBot
 
 ## About
 Bot for parsing articles from habr.com
