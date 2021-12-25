@@ -10,9 +10,9 @@ from aiogram.types import (
     message,
 )
 from config import TOKEN
-import urllib.request
 from datetime import datetime
 from lib.hubs import Hubs
+from lib.test import test
 from lib.utils import log, parse
 from lib.commands import Command
 from lib.key_categories import inline_kb_full
@@ -46,15 +46,6 @@ async def message_handler(message: types.Message, handler: Callable) -> None:
     else:
         await message.reply("Where is your invite code?")
         log(f"![{datetime.now()}] Unregistered user: {name}\n")
-
-
-async def process_callback_handler(
-    url: Hubs, bot: Bot, query: types.CallbackQuery
-) -> None:
-    res = parse(urllib.request.urlopen(url))
-    await bot.send_message(query.from_user.id, res)
-    log(f"[{datetime.now()}] Выдана статья по {url}\n")
-    await bot.answer_callback_query(query.id)
 
 
 # ---------main_buttons---------
@@ -101,64 +92,8 @@ async def process_vm_command(message: types.Message):
 
 
 # ---------callback_categories---------
-@dispatcher.callback_query_handler(lambda c: c.data == "InfoSec")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.infosec, bot, callback_query)
 
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Py")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.py, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "PopScien")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.popscien, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "DIY")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.diy, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Gadgets")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.gadgets, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "DevMic")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.devmic, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "ServAdm")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.servadm, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "DevOps")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.devops, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Network")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.network, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Nix")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.nix, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "Robot")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.robot, bot, callback_query)
-
-
-@dispatcher.callback_query_handler(lambda c: c.data == "SysDev")
-async def process_callback_button(callback_query: types.CallbackQuery):
-    await process_callback_handler(Hubs.sysdev, bot, callback_query)
+test(dispatcher, bot)
 
 
 # ---------callback_commands---------
