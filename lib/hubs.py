@@ -3,7 +3,6 @@ from utils import compose_hub_url
 
 class Hubs:
     infosec = compose_hub_url("infosecurity")
-    infosec = compose_hub_url("infosecurity")
     py = compose_hub_url("python")
     popscien = compose_hub_url("popular_science")
     diy = compose_hub_url("DIY")
