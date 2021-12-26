@@ -20,4 +20,4 @@ Bot for parsing articles from habr.com
 
 - [x] Log user actions
 - [x] Exclude other users via `chat_id`
-- [ ] Updime VM trigger 
+- [ ] Uptime VM trigger 
