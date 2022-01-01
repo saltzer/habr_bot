@@ -1,5 +1,8 @@
+import datetime
+
 from config import BASE_URL
 from bs4 import BeautifulSoup
+from uptime import boottime
 
 
 def compose_hub_url(endpoint):
@@ -7,9 +10,8 @@ def compose_hub_url(endpoint):
 
 
 def log(line):
-    log = open("log.txt", "a")
-    log.write(line)
-    log.close()
+    with open("log.txt", "a") as log:
+        log.write(line)
 
 
 def parse(url):
@@ -21,3 +23,7 @@ def parse(url):
             ):
                 res = BASE_URL + link["href"]
                 return res
+
+
+def uptime():
+    return str(boottime())

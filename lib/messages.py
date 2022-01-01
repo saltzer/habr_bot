@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable
 from lib.commands import Command
 from lib.utils import log
@@ -17,21 +18,22 @@ markup = (
 )
 
 
-def user_authorized(id: int, inviteId: int) -> bool:
-    return id == inviteId
+def user_authorized(id: int, invite_id: int) -> bool:
+    return id == invite_id
 
 
-def register_message_handlers(dispatcher, bot, inviteCode):
+def register_message_handlers(dispatcher, bot, invite_code):
+
     async def message_handler(message, handler: Callable) -> None:
         chat_id = message.chat.id
         name = message.chat.first_name
 
-        if user_authorized(chat_id, inviteCode):
+        if user_authorized(chat_id, invite_code):
             await handler()
-            log(f"![{datetime.now()}] Success access from user: {name}\n")
+            log(f"[{datetime.now()}] Success access from user: {name}\n")
         else:
             await message.reply("Where is your invite code?")
-            log(f"![{datetime.now()}] Unregistered user: {name}\n")
+            log(f"[{datetime.now()}] Unregistered user: {name}\n")
 
     @dispatcher.message_handler(commands=[Command.Start])
     async def process_start_command(message):

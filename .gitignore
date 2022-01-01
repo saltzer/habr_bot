@@ -3,3 +3,4 @@ log.txt
 *.xml
 *.pyc
 .vscode
+config.py

@@ -3,7 +3,7 @@ from datetime import datetime
 import os, subprocess
 
 
-def register_vm_queries(dispatcher, bot, inviteCode):
+def register_vm_queries(dispatcher, bot, invite_code, uptime):
     @dispatcher.callback_query_handler(lambda c: c.data == "reboot")
     async def process_callback_button(callback_query):
         log("Выполнена команда reboot " + " | Время: " + str(datetime.now()) + "\n")
@@ -20,12 +20,12 @@ def register_vm_queries(dispatcher, bot, inviteCode):
     async def process_callback_button(callback_query):
         try:
             with open("log.txt", "rb") as file:
-                await bot.send_document(inviteCode, file)
+                await bot.send_document(invite_code, file)
             await bot.answer_callback_query(callback_query.id)
         except:
-            await bot.send_message(inviteCode, "Error send log")
+            await bot.send_message(invite_code, "Error send log")
 
-    @dispatcher.callback_query_handler(lambda c: c.data == "check_net")
+    @dispatcher.callback_query_handler(lambda c: c.data == "get_info")
     async def process_callback_button(callback_query):
         try:
             command = ["wget -O - -q icanhazip.com"]
@@ -37,7 +37,8 @@ def register_vm_queries(dispatcher, bot, inviteCode):
                 shell=True,
             )
             res = process.stdout.read().decode("gbk")
-            await bot.send_message(inviteCode, res)
+            await bot.send_message(invite_code, "IP: " + res +
+                                                "Uptime: " + uptime)
             await bot.answer_callback_query(callback_query.id)
         except:
-            await bot.send_message(inviteCode, "Error check IP")
+            await bot.send_message(invite_code, "Error get info")
