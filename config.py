@@ -1,3 +1,3 @@
-TOKEN = '2083968479:AAHkindPo8W_l4kRMrRR6kH4P0z-gn33IdU'
-INVITE_CODE = 406200618
+TOKEN = ''
+INVITE_CODE = ######
 BASE_URL = "https://habr.com"
