@@ -21,4 +21,3 @@ Bot for parsing articles from habr.com
 - [x] Log user actions
 - [x] Exclude other users via `chat_id`
 - [ ] Check VM info
-#### - [ ] test
