@@ -7,7 +7,6 @@ from lib.category_queries import register_category_queries
 from lib.messages import register_message_handlers
 from lib.vm_querries import register_vm_queries
 from lib.utils import uptime
-import asyncio
 
 
 bot = Bot(token=TOKEN)

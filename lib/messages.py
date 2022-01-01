@@ -1,4 +1,3 @@
-import asyncio
 from typing import Callable
 from lib.commands import Command
 from lib.utils import log

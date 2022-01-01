@@ -1,5 +1,3 @@
-import datetime
-
 from config import BASE_URL
 from bs4 import BeautifulSoup
 from uptime import boottime
