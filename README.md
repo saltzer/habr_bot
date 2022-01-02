@@ -15,7 +15,7 @@ Bot for parsing articles from habr.com
 ### `/command` - display available VM commands
 ![](assets/vm-commands.png)
 
-### `/get info` - display system info
+### `$ get info` - display system info
 ![](assets/sysinfo.png)
 
 ## To Do
