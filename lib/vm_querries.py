@@ -98,15 +98,3 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
             await bot.answer_callback_query(callback_query.id)
         except:
             await bot.send_message(invite_code, "Error get info")
-
-
-
-
-
-
-
-
-
-
-
-
