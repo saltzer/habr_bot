@@ -15,9 +15,11 @@ Bot for parsing articles from habr.com
 ### `/command` - display available VM commands
 ![](assets/vm-commands.png)
 
+### `$ get info` - display system info
+![](assets/sysinfo.png)
 
 ## To Do
 
 - [x] Log user actions
 - [x] Exclude other users via `chat_id`
-- [ ] Check VM info
+- [x] Add check VM sysinfo
