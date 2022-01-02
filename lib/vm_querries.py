@@ -38,15 +38,25 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
             )
             res = ip_process.stdout.read().decode("gbk")
 
-            mem_command = ["grep -w 'MemFree\|MemTotal' /proc/meminfo"]
-            ip_process = subprocess.Popen(
-                mem_command,
+            mem_used_command = ["free -m | awk {'print $3'} | tail -n2 | head -n1"]
+            mem_used_process = subprocess.Popen(
+                mem_used_command,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             shell = True,
             )
-            mem = ip_process.stdout.read().decode("gbk")
+            mem_used = str.rstrip(mem_used_process.stdout.read().decode("gbk"))
+
+            mem_total_command = ["free -m | awk {'print $2'} | tail -n2 | head -n1"]
+            mem_total_process = subprocess.Popen(
+                mem_total_command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+            )
+            mem_total = str.rstrip(mem_total_process.stdout.read().decode("gbk"))
 
             os_command = ["uname -r"]
             os_process = subprocess.Popen(
@@ -91,8 +101,9 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
             await bot.send_message(invite_code, "IP:                       " + res +
                                                 "Uptime:             " + uptime + "\n" +
                                                 "Kernel:               " + os +
-                                                "CPU Usage:      " + cpu + " %" + "\n" +
-                                                mem +
+                                                "CPU Usage:       " + cpu + " %" + "\n" +
+                                                "RAM Used:        " + mem_used + "M" + "\n" +
+                                                "RAM Total:         " + mem_total + "M" + "\n" +
                                                 "DiskUsed:          " + disk +
                                                 "DiskTotal:          " + disk_all)
             await bot.answer_callback_query(callback_query.id)
