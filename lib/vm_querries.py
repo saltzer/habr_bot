@@ -28,17 +28,85 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
     @dispatcher.callback_query_handler(lambda c: c.data == "get_info")
     async def process_callback_button(callback_query):
         try:
-            command = ["wget -O - -q icanhazip.com"]
-            process = subprocess.Popen(
-                command,
+            ip_command = ["wget -O - -q icanhazip.com"]
+            ip_process = subprocess.Popen(
+                ip_command,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 shell=True,
             )
-            res = process.stdout.read().decode("gbk")
-            await bot.send_message(invite_code, "IP: " + res +
-                                                "Uptime: " + uptime)
+            res = ip_process.stdout.read().decode("gbk")
+
+            mem_command = ["grep -w 'MemFree\|MemTotal' /proc/meminfo"]
+            ip_process = subprocess.Popen(
+                mem_command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            shell = True,
+            )
+            mem = ip_process.stdout.read().decode("gbk")
+
+            os_command = ["uname -r"]
+            os_process = subprocess.Popen(
+                os_command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+            )
+            os = os_process.stdout.read().decode("gbk")
+
+            disk_command = ["df -h /dev/sda2 | awk {'print $3'} | tail -c4"]
+            disk_process = subprocess.Popen(
+                disk_command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+            )
+            disk = disk_process.stdout.read().decode("gbk")
+
+            disk_all_command = ["df -h /dev/sda2 | awk {'print $2'} | tail -c5"]
+            disk_all_process = subprocess.Popen(
+                disk_all_command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+            )
+            disk_all = disk_all_process.stdout.read().decode("gbk")
+
+            cpu_command = ["top -n 1 -b | awk '/^%Cpu/{print $2}'"]
+            cpu_process = subprocess.Popen(
+                cpu_command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                shell=True,
+            )
+            cpu = str.rstrip(cpu_process.stdout.read().decode("gbk"))
+
+            await bot.send_message(invite_code, "IP:                       " + res +
+                                                "Uptime:             " + uptime + "\n" +
+                                                "Kernel:               " + os +
+                                                "CPU Usage:      " + cpu + " %" + "\n" +
+                                                mem +
+                                                "DiskUsed:          " + disk +
+                                                "DiskTotal:          " + disk_all)
             await bot.answer_callback_query(callback_query.id)
         except:
             await bot.send_message(invite_code, "Error get info")
+
+
+
+
+
+
+
+
+
+
+
+
