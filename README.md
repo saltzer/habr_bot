@@ -18,6 +18,9 @@ Bot for parsing articles from habr.com
 ### `$ get info` - display system info
 ![](assets/sysinfo.png)
 
+### example log file
+![](assets/example_log.png)
+
 ## To Do
 
 - [x] Log user actions
