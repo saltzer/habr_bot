@@ -6,13 +6,13 @@ import os, subprocess
 def register_vm_queries(dispatcher, bot, invite_code, uptime):
     @dispatcher.callback_query_handler(lambda c: c.data == "reboot")
     async def process_callback_button(callback_query):
-        log("Command executed -- reboot " + " | Время: " + str(datetime.now()) + "\n")
+        log("Command executed -- reboot " + " | Time: " + str(datetime.now()) + "\n")
         os.system("reboot")
         await bot.answer_callback_query(callback_query.id)
 
     @dispatcher.callback_query_handler(lambda c: c.data == "shutdown")
     async def process_callback_button(callback_query):
-        log("Command executed -- shutdown " + " | Время: " + str(datetime.now()) + "\n")
+        log("Command executed -- shutdown " + " | Time: " + str(datetime.now()) + "\n")
         os.system("shutdown")
         await bot.answer_callback_query(callback_query.id)
 
