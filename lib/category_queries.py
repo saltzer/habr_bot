@@ -7,7 +7,7 @@ from datetime import datetime
 async def process_callback_handler(url: Hubs, bot, query) -> None:
     res = parse(urllib.request.urlopen(url))
     await bot.send_message(query.from_user.id, res)
-    log(f"[{datetime.now()}] Выдана статья по {url}\n")
+    log(f"[{datetime.now()}] Issued article {url}\n")
     await bot.answer_callback_query(query.id)
 
 
