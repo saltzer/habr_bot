@@ -1,9 +1,10 @@
 from typing import Callable
 from lib.commands import Command
-from lib.utils import log
+from lib.utils import log, States
 from datetime import datetime
 from lib.key_categories import inline_kb_full
 from lib.key_command import inline_kb_com
+from aiogram.dispatcher import FSMContext
 from aiogram.types import (
     ReplyKeyboardMarkup,
     KeyboardButton,
@@ -14,6 +15,7 @@ markup = (
     .add(KeyboardButton("/help"))
     .add(KeyboardButton("/categories"))
     .add(KeyboardButton("/command"))
+    .add(KeyboardButton("/torrent film"))
 )
 
 
@@ -54,6 +56,7 @@ def register_message_handlers(dispatcher, bot, invite_code):
     /help - вывод этого сообщения
     /categories - просмотр хабов
     /command - выполнить команду
+    /torrent - поиск торрента по категории
             """
             )
 
@@ -72,6 +75,22 @@ def register_message_handlers(dispatcher, bot, invite_code):
             await message.reply("Доступные команды:", reply_markup=inline_kb_com)
 
         await message_handler(message, handler)
+
+
+    @dispatcher.message_handler(commands=[Command.Torrent])
+    async def process_await_torrent_film(message):
+        await States.STATE_FILM.set()
+        await message.reply("Название фильма:")
+
+    @dispatcher.message_handler(state=States.STATE_FILM)
+    async def process_torrent_film(message, state: FSMContext):
+        answer_film = 'Поиск фильма ' + message.text
+
+        await bot.send_message(message.from_user.id, answer_film, reply_markup=markup, parse_mode='HTML')
+        await state.finish()
+        await state.reset_state()
+
+
 
     @dispatcher.message_handler()
     async def echo_message(msg):

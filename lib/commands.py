@@ -3,3 +3,4 @@ class Command:
     Help = "help"
     Categories = "categories"
     Vm = "command"
+    Torrent = "torrent"

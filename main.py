@@ -1,6 +1,8 @@
 from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 from config import TOKEN, INVITE_CODE
 from lib.category_queries import register_category_queries
@@ -11,7 +13,8 @@ from lib.utils import uptime
 
 bot = Bot(token=TOKEN)
 
-dispatcher = Dispatcher(bot)
+dispatcher = Dispatcher(bot, storage=MemoryStorage())
+dispatcher.middleware.setup(LoggingMiddleware())
 invite_code = INVITE_CODE
 
 

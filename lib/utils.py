@@ -1,6 +1,11 @@
 from config import BASE_URL
 from bs4 import BeautifulSoup
 from uptime import boottime
+from aiogram.dispatcher.filters.state import State, StatesGroup
+
+
+class States(StatesGroup):
+    STATE_FILM = State()
 
 
 def compose_hub_url(endpoint):
