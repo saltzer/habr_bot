@@ -22,5 +22,9 @@ register_message_handlers(dispatcher, bot, invite_code)
 register_category_queries(dispatcher, bot)
 register_vm_queries(dispatcher, bot, invite_code, uptime())
 
+async def shutdown(dispatcher: Dispatcher):
+    await dispatcher.storage.close()
+    await dispatcher.storage.wait_closed()
+
 if __name__ == "__main__":
-    executor.start_polling(dispatcher)
+    executor.start_polling(dispatcher, on_shutdown=shutdown)

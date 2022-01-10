@@ -25,6 +25,11 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
         except:
             await bot.send_message(invite_code, "Error send log")
 
+    @dispatcher.callback_query_handler(lambda c: c.data == "restart_bot")
+    async def process_callback_button(callback_query):
+        os.system("pkill -f main.py | python PycharmProjects/habr_bot/main.py")     # не пашет, киляет процесс, но не запускает заново
+        await bot.answer_callback_query(callback_query.id)
+
     @dispatcher.callback_query_handler(lambda c: c.data == "get_info")
     async def process_callback_button(callback_query):
         try:
