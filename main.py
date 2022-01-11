@@ -17,10 +17,10 @@ dispatcher = Dispatcher(bot, storage=MemoryStorage())
 dispatcher.middleware.setup(LoggingMiddleware())
 invite_code = INVITE_CODE
 
-
 register_message_handlers(dispatcher, bot, invite_code)
 register_category_queries(dispatcher, bot)
 register_vm_queries(dispatcher, bot, invite_code, uptime())
+
 
 async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
