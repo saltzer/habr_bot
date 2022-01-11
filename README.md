@@ -26,4 +26,5 @@ Bot for parsing articles from habr.com
 - [x] Log user actions
 - [x] Exclude other users via `chat_id`
 - [x] Add check VM sysinfo
+- [x] Add restart \ kill bot
 - [ ] Add torrent downloader
