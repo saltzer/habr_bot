@@ -12,7 +12,7 @@ Bot for parsing articles from habr.com
 ### `/categories` - display hubs
 ![](assets/categories.png)
 
-### `/command` - display available VM commands
+### `/command` - display available VM and bot commands
 ![](assets/vm-commands.png)
 
 ### `$ get info` - display system info
