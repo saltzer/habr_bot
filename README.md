@@ -1,7 +1,7 @@
 # HabrBot
 
 ## About
-Bot for parsing articles from habr.com
+Bot for parsing articles from habr.com and send commands to virtual machine
 
 ## Commands
 ### `/start` - start a Bot
