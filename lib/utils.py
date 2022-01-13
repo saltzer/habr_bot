@@ -1,4 +1,4 @@
-from config import BASE_URL
+from config import BASE_URL, RUTRACKER_URL
 from bs4 import BeautifulSoup
 from uptime import boottime
 from aiogram.dispatcher.filters.state import State, StatesGroup

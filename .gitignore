@@ -4,3 +4,4 @@ log.txt
 *.pyc
 .vscode
 config.py
+*.db

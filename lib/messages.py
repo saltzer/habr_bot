@@ -89,8 +89,7 @@ def register_message_handlers(dispatcher, bot, invite_code):
         if "/" in message.text:
             await message.reply("Обнаружен недопустимый символ")
         else:
-            answer_film = 'Поиск фильма ' + message.text
-            # парсинг рутрекера
+            answer_film = 'Поиск фильма ' + message.text + ' по базе'
             await bot.send_message(message.from_user.id, answer_film, reply_markup=markup, parse_mode='HTML')
 
         await state.finish()

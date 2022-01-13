@@ -10,7 +10,6 @@ from lib.messages import register_message_handlers
 from lib.vm_querries import register_vm_queries
 from lib.utils import uptime
 
-
 bot = Bot(token=TOKEN)
 
 dispatcher = Dispatcher(bot, storage=MemoryStorage())
@@ -25,6 +24,7 @@ register_vm_queries(dispatcher, bot, invite_code, uptime())
 async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
+
 
 if __name__ == "__main__":
     executor.start_polling(dispatcher, on_shutdown=shutdown)
