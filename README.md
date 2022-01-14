@@ -32,6 +32,7 @@ Before running the bot, you need to collect the database using 'films_collector.
 - [x] Exclude other users via `chat_id`
 - [x] Add check VM sysinfo
 - [x] Add restart \ kill bot
-- [x] Add sqlite3 for parsing films
-- [x] Add Bot and DB collaboration
+- [x] Sqlite3 for parsing films
+- [x] Bot and DB collaboration
 - [ ] Movie Search Exceptions
+- [ ] Add logging category /films
