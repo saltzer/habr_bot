@@ -1,7 +1,7 @@
 from config import BASE_URL
 from bs4 import BeautifulSoup
 from uptime import boottime
-import sqlite3
+import sqlite3, re
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
@@ -28,29 +28,53 @@ def parse(url):
                 res = BASE_URL + link["href"]
                 return res
 
-def get_film(film_name):
-    name_list = []
-    description_list = []
-    link_list = []
 
-    try:
-        db = sqlite3.connect('../DB_films.db')
-        cur = db.cursor()
-        print("Подключен к SQLite")
+async def get_film(message):
+    film_name = message.text
+    if "/" in film_name:
+        await message.reply("Обнаружен недопустимый символ")
+    else:
 
-        for name in cur.execute('SELECT NAME FROM DB_films WHERE NAME LIKE ?', ('%' + film_name + '%',)):
-            name_list.append(name[0])
+        name_list = []
+        description_list = []
+        link_list = []
 
-        cur.close()
+        try:
+            db = sqlite3.connect('/home/user/PycharmProjects/habr_bot/DB_films.db')
+            cur = db.cursor()
 
-    except sqlite3.Error as error:
-        print("Ошибка при работе с SQLite", error)
+            for name in cur.execute('SELECT NAME FROM Films_DB WHERE NAME LIKE ?', ('%' + film_name + '%',)):
+                name_list.append(name[0])
 
-    finally:
-        if db:
-            db.close()
-            print("Соединение с SQLite закрыто")
+            for description in cur.execute('SELECT DESCRIPTION FROM Films_DB WHERE NAME LIKE ?', ('%' + film_name + '%',)):
+                description_list.append(description[0])
 
+            for link in cur.execute('SELECT LINK FROM Films_DB WHERE NAME LIKE ?', ('%' + film_name + '%',)):
+                link_list.append(link[0])
+
+            cur.close()
+
+            if not name_list:
+                name_list.append('В базе нет такого фильма')
+
+            name_res = str(name_list)
+            name_res = re.sub(r"['[\]n]", "", name_res)
+
+            description_res = str(description_list)
+            description_res = re.sub(r"['[\]n]", "", description_res)
+
+            link_res = str(link_list)
+            link_res = re.sub(r"['[\]]", "", link_res)
+
+
+        except sqlite3.Error as error:
+            print("Ошибка при работе с SQLite", error)
+
+        finally:
+            if db:
+                db.close()
+
+    return name_res
 
 
 def uptime():
