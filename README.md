@@ -2,6 +2,7 @@
 
 ## About
 Bot for parsing articles from habr.com, send commands to host virtual machine and movie database search
+
 Before running the bot, you need to collect the database using 'films_collector.py'
 
 ## Commands
