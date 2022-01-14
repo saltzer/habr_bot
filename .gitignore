@@ -5,3 +5,4 @@ log.txt
 .vscode
 config.py
 *.db
+config.py
