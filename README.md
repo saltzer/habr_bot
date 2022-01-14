@@ -27,4 +27,5 @@ Bot for parsing articles from habr.com and send commands to virtual machine
 - [x] Exclude other users via `chat_id`
 - [x] Add check VM sysinfo
 - [x] Add restart \ kill bot
-- [ ] Add torrent downloader
+- [x] Add sqlite3 for parsing films
+- [ ] Add Bot and DB collaboration
