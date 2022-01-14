@@ -1,7 +1,8 @@
 # HabrBot
 
 ## About
-Bot for parsing articles from habr.com and send commands to virtual machine
+Bot for parsing articles from habr.com, send commands to host virtual machine and movie database search
+Before running the bot, you need to collect the database using 'films_collector.py'
 
 ## Commands
 ### `/start` - start a Bot
@@ -21,6 +22,9 @@ Bot for parsing articles from habr.com and send commands to virtual machine
 ### example log file
 ![](assets/example_log.png)
 
+### movie search example
+![](assets/films.png)
+
 ## To Do
 
 - [x] Log user actions
@@ -28,4 +32,5 @@ Bot for parsing articles from habr.com and send commands to virtual machine
 - [x] Add check VM sysinfo
 - [x] Add restart \ kill bot
 - [x] Add sqlite3 for parsing films
-- [ ] Add Bot and DB collaboration
+- [x] Add Bot and DB collaboration
+- [ ] Movie Search Exceptions
