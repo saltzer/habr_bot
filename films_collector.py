@@ -92,8 +92,8 @@ while True:
     print(url)
 
 
-    if x == 919:
-        print("БД собрана, всего элементов: " + str(919 * 36))
+    if x == 802:
+        print("БД собрана, всего элементов: " + str(802 * 18))
         cur.close()
         db.close()
         break
