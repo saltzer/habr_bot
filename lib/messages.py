@@ -132,9 +132,9 @@ def register_message_handlers(dispatcher, bot, invite_code):
                 if db:
                     db.close()
 
-        await bot.send_message(message.from_user.id, name_res + '\n' + '\n' +
-                                                     description_res[1 : -1] + '\n' + '\n' +
-                                                     link_res, reply_markup=markup, parse_mode='HTML')
+            await bot.send_message(message.from_user.id, name_res + '\n' + '\n' +
+                                                         description_res[1 : -1] + '\n' + '\n' +
+                                                         link_res, reply_markup=markup, parse_mode='HTML')
         await state.finish()
         await state.reset_state()
 
