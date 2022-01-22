@@ -36,3 +36,4 @@ Before running the bot, you need to collect the database using 'films_collector.
 - [x] Bot and DB collaboration
 - [ ] Movie Search Exceptions
 - [ ] Add logging category /films
+- [ ] 'Connection reset by peer' error exception (proxy or timeout)
