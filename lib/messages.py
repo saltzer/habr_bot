@@ -1,15 +1,15 @@
-from typing import Callable
-from lib.commands import Command
-from lib.utils import log, States
+import re
+import sqlite3
 from datetime import datetime
-import sqlite3, re
+from typing import Callable
+
+from aiogram.dispatcher import FSMContext
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+
+from lib.commands import Command
 from lib.key_categories import inline_kb_full
 from lib.key_command import inline_kb_com
-from aiogram.dispatcher import FSMContext
-from aiogram.types import (
-    ReplyKeyboardMarkup,
-    KeyboardButton,
-)
+from lib.utils import States, log
 
 markup = (
     ReplyKeyboardMarkup(resize_keyboard=True)
@@ -97,17 +97,19 @@ def register_message_handlers(dispatcher, bot, invite_code):
             link_list = []
 
             try:
-                db = sqlite3.connect('/home/user/PycharmProjects/habr_bot/DB_films.db')
+                db = sqlite3.connect('./DB_films.db')
                 cur = db.cursor()
 
-                for name in cur.execute('SELECT NAME FROM Films_DB WHERE NAME LIKE ?', ('%' + film_name + '%',)):
+                for name in cur.execute('SELECT NAME FROM Films_DB WHERE NAME LIKE ?',
+                                               (film_name,)):
                     name_list.append(name[0])
 
                 for description in cur.execute('SELECT DESCRIPTION FROM Films_DB WHERE NAME LIKE ?',
-                                               ('%' + film_name + '%',)):
+                                               (film_name,)):
                     description_list.append(description[0])
 
-                for link in cur.execute('SELECT LINK FROM Films_DB WHERE NAME LIKE ?', ('%' + film_name + '%',)):
+                for link in cur.execute('SELECT LINK FROM Films_DB WHERE NAME LIKE ?',
+                                               (film_name,)):
                     link_list.append(link[0])
 
                 cur.close()
@@ -119,7 +121,7 @@ def register_message_handlers(dispatcher, bot, invite_code):
                 name_res = re.sub(r"['[\]n]", "", name_res)
 
                 description_res = str(description_list)
-                description_res = re.sub(r"['[\]n]", "", description_res)
+                description_res = re.sub(r"['\n\t]", "", description_res)
 
                 link_res = str(link_list)
                 link_res = re.sub(r"['[\]]", "", link_res)
