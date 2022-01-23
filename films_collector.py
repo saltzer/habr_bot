@@ -56,7 +56,6 @@ while True:
 
 
     for link0 in link1_list:
-
         page2 = BeautifulSoup(requests.get(link0,headers=headers).text, "lxml")
 
         description = page2.find("div", class_="fdesc clearfix slice-this").text
@@ -91,9 +90,12 @@ while True:
     url = LORDFILM_0 + "page/" + str(x) + "/"
     print(url)
 
+    if x == 407:
+        cur.execute('SELECT COUNT(*) from Films_DB')
+        cur_result = cur.fetchone()
 
-    if x == 802:
-        print("БД собрана, всего элементов: " + str(802 * 18))
+        print("БД собрана, всего элементов: ", cur_result)
+
         cur.close()
         db.close()
         break
