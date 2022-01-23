@@ -39,6 +39,13 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
         await bot.answer_callback_query(callback_query.id)
         os.system("pkill -f main.py")
 
+    @dispatcher.callback_query_handler(lambda c: c.data == "update_db")
+    async def process_callback_button(callback_query):
+        await bot.send_message(invite_code, "Обновление БД..")
+        await bot.answer_callback_query(callback_query.id)
+        os.system("rm ./DB_films.db")
+        os.system("python ./films_collector.py")
+
     @dispatcher.callback_query_handler(lambda c: c.data == "get_info")
     async def process_callback_button(callback_query):
         try:
