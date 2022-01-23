@@ -35,5 +35,5 @@ Before running the bot, you need to collect the database using 'films_collector.
 - [x] Sqlite3 for parsing films
 - [x] Bot and DB collaboration
 - [x] Movie Search Exceptions
-- [ ] Add logging category /films
+- [x] Add logging category /films
 - [ ] 'Connection reset by peer' error exception (proxy, timeout, enumeration)
