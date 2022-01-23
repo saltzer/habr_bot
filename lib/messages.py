@@ -86,7 +86,10 @@ def register_message_handlers(dispatcher, bot, invite_code):
 
     @dispatcher.message_handler(state=States.STATE_FILM)
     async def process_film(message, state: FSMContext):
+        name = message.chat.first_name
         film_name = message.text
+
+        log(f"[{datetime.now()}] Movie search {film_name} from user: {name}\n")
 
         if "/" in film_name:
             await message.reply("Обнаружен недопустимый символ")
