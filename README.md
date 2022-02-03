@@ -26,6 +26,9 @@ Before running the bot, you need to collect the database using 'films_collector.
 ### movie search example
 ![](assets/films.png)
 
+### shell inside bot
+![](assets/shell.png)
+
 ## To Do
 
 - [x] Log user actions
