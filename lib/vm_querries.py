@@ -1,6 +1,8 @@
 from lib.utils import log
 from datetime import datetime
 import os, subprocess
+import psutil
+import operator
 
 
 def register_vm_queries(dispatcher, bot, invite_code, uptime):
@@ -39,12 +41,11 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
         await bot.answer_callback_query(callback_query.id)
         os.system("pkill -f main.py")
 
-    @dispatcher.callback_query_handler(lambda c: c.data == "update_db")
+    @dispatcher.callback_query_handler(lambda c: c.data == "reboot")
     async def process_callback_button(callback_query):
-        await bot.send_message(invite_code, "Обновление БД..")
+        log("Command executed -- reboot " + " | Time: " + str(datetime.now()) + "\n")
+        os.system("reboot")
         await bot.answer_callback_query(callback_query.id)
-        os.system("rm ./DB_films.db")
-        os.system("python ./films_collector.py")
 
     @dispatcher.callback_query_handler(lambda c: c.data == "get_info")
     async def process_callback_button(callback_query):
@@ -65,7 +66,7 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-            shell = True,
+                shell=True,
             )
             mem_used = str.rstrip(mem_used_process.stdout.read().decode("gbk"))
 
@@ -119,14 +120,36 @@ def register_vm_queries(dispatcher, bot, invite_code, uptime):
             )
             cpu = str.rstrip(cpu_process.stdout.read().decode("gbk"))
 
+            pids = psutil.pids()
+            pidsreply = ""
+            procs = {}
+
+            for pid in pids:
+                p = psutil.Process(pid)
+
+                try:
+                    pmem = p.memory_percent()
+                    if pmem > 0.5:
+                        if p.name() in procs:
+                            procs[p.name()] += pmem
+                        else:
+                            procs[p.name()] = pmem
+                except:
+                    log("Exception while collecting PID " + " | Time: " + str(datetime.now()) + "\n")
+
+            sortedprocs = sorted(procs.items(), key=operator.itemgetter(1), reverse=True)
+
+            for proc in sortedprocs:
+                pidsreply += proc[0] + " " + ("%.2f" % proc[1]) + " %\n"
+
             await bot.send_message(invite_code, "IP:                       " + res +
-                                                "Uptime:             " + uptime + "\n" +
-                                                "Kernel:               " + os +
-                                                "CPU Usage:       " + cpu + " %" + "\n" +
-                                                "RAM Used:        " + mem_used + "M" + "\n" +
-                                                "RAM Total:         " + mem_total + "M" + "\n" +
-                                                "DiskUsed:          " + disk +
-                                                "DiskTotal:          " + disk_all)
+                                   "Uptime:             " + uptime + "\n" +
+                                   "Kernel:               " + os +
+                                   "CPU Usage:       " + cpu + " %" + "\n" +
+                                   "RAM Used:        " + mem_used + "M" + "\n" +
+                                   "RAM Total:         " + mem_total + "M" + "\n" +
+                                   "DiskUsed:          " + disk +
+                                   "DiskTotal:          " + disk_all + "\n" + "\n" + "PID:" + "\n" + pidsreply)
             await bot.answer_callback_query(callback_query.id)
         except:
             await bot.send_message(invite_code, "Error get info")
